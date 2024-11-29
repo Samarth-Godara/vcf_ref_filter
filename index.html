@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCF Reference Filter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: black;
+            background-color: #f5f5f5; /* Light Grey */
+        }
+        header {
+            background-color: #ff7043; /* Orange */
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 4.5em;
+        }
+        header p {
+            font-size: 2.2em;
+            margin: 10px 0 0;
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            margin-bottom: 30px;
+        }
+        section h2 {
+            color: #ff7043; /* Orange */
+            border-bottom: 2px solid #d6d6d6; /* Grey */
+            padding-bottom: 5px;
+        }
+        a {
+            color: #ff7043; /* Orange */
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .download-links, .resources {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .download-links a, .resources a {
+            background-color: #ff7043; /* Orange */
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+            flex: 1;
+            max-width: 200px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .download-links a:hover, .resources a:hover {
+            background-color: #e64a19; /* Darker Orange */
+        }
+        footer {
+            background-color: #616161; /* Dark Grey */
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9em;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>VCF Reference Filter</h1>
+        <p>Effortlessly Filter Your VCF Files</p>
+    </header>
+    <main>
+        <section>
+            <h2>About VCF Reference Filter</h2>
+            <p>VCF Reference Filter is a robust tool designed to help geneticists and bioinformaticians filter Variant Call Format (VCF) files. Simplify the process of identifying significant variants with precision and ease.</p>
+            <p>VCF (Variant Call Format) files are a standard format used in bioinformatics to store information about genetic variations. These files are generated after sequencing data is processed through variant calling pipelines, such as GATK, bcftools, or FreeBayes. VCF files are used to describe differences in DNA sequences compared to a reference genome.</p>
+        </section>
+
+        <img src="screenshot.png" alt="VCF Reference Filter Logo" style="display: block; margin: 0 auto;">
+
+        <section>
+            <h2>Attributes of a VCF File</h2>
+            <p>VCF files contain a <strong>header section</strong> and a <strong>data section</strong>:</p>
+            <ul>
+                <li><strong>Header Section:</strong> Metadata lines starting with <code>##</code> contain information about the file, including the reference genome, tools used, and annotations.</li>
+                <li><strong>Column Headers:</strong> These provide structure to the data fields:
+                    <ul>
+                        <li><code>#CHROM</code>: Chromosome identifier.</li>
+                        <li><code>POS</code>: Position of the variant on the chromosome.</li>
+                        <li><code>ID</code>: Variant identifier (e.g., rsID or <code>.</code>, meaning no ID).</li>
+                        <li><code>REF</code>: Reference allele at the position.</li>
+                        <li><code>ALT</code>: Alternate allele(s) at the position.</li>
+                        <li><code>QUAL</code>: Phred-scaled quality score for the variant.</li>
+                        <li><code>FILTER</code>: Quality filters applied (e.g., <code>PASS</code>, <code>.</code>, or a reason for exclusion).</li>
+                        <li><code>INFO</code>: Additional annotations about the variant (e.g., depth, allele frequency, functional impact).</li>
+                        <li><code>FORMAT</code>: Defines the genotype fields (e.g., <code>GT</code>, <code>PL</code>, etc.).</li>
+                        <li><strong>Sample Columns:</strong> Contains genotype and related data for each sample (e.g., <code>Parent1_sorted.bam</code> and <code>Parent2_sorted.bam</code>).</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        <section>
+            <h2>Filtering Where Parent Genotypes Differ</h2>
+            <p>To filter cases where the genotypes of parents differ (e.g., <strong>Parent1</strong> starts with <code>1</code> and <strong>Parent2</strong> starts with <code>0</code>):</p>
+            <ol>
+                <li>Focus on the <strong>FORMAT</strong> field, specifically the <code>GT</code> (genotype) data.</li>
+                <li>Interpret genotype values:
+                    <ul>
+                        <li><code>1/1</code>: Indicates a homozygous alternate genotype.</li>
+                        <li><code>0/1</code>: Heterozygous genotype with one reference and one alternate allele.</li>
+                    </ul>
+                </li>
+                <li>Compare the <code>GT</code> values between <code>Parent1_sorted.bam</code> and <code>Parent2_sorted.bam</code>.</li>
+            </ol>
+            <p><strong>Example:</strong></p>
+            <pre>
+#CHROM  POS   ID  REF ALT QUAL FILTER INFO FORMAT           Parent1_sorted.bam Parent2_sorted.bam
+Chr0    4027  .   CG  CGG 178   .     INDEL;... GT:PL           1/1:120,11,0      0/1:91,0,16
+            </pre>
+            <p>In this VCF record, <code>Parent1_sorted.bam</code> has <code>1/1</code> (homozygous alternate), and <code>Parent2_sorted.bam</code> has <code>0/1</code> (heterozygous), indicating differing genotypes.</p>
+        </section>
+
+
+        <section>
+            <h2>Download VCF Reference Filter</h2>
+            <p>(For the first time usage in Windows, select "More Info" and then "Run Anyway" to proceed.)</p><br>
+            <div class="download-links">
+                <a href="https://example.com/vcf-windows-download" target="_blank">Download for Windows</a>
+                <a href="https://example.com/vcf-ubuntu-download" target="_blank">Download for Ubuntu</a>
+            </div>
+        </section>
+        <section>
+            <h2>Resources</h2>
+            <div class="resources">
+                <a href="https://example.com/vcf-user-manual" target="_blank">User Manual</a>
+                <a href="https://example.com/vcf-tutorial-video" target="_blank">Tutorial Video</a>
+            </div>
+        </section>
+
+        <section>
+            <h2>Applications</h2>
+            <ul>
+                <li><strong>Genetic Studies:</strong> Identifying variants where parents differ can highlight potential points of recombination or informative markers for mapping traits.</li>
+                <li><strong>Crop Breeding:</strong> Helps identify variants segregating between parents to track inheritance patterns in offspring.</li>
+                <li><strong>Medical Genetics:</strong> Differentiating between parent genotypes can uncover de novo mutations in progeny or verify parent-child relationships.</li>
+                <li><strong>Population Studies:</strong> Segregating variants are used to study allele frequency and genetic diversity.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Benefits</h2>
+            <ul>
+                <li>Facilitates the identification of informative markers for genetic mapping.</li>
+                <li>Helps in understanding recombination patterns and genetic inheritance.</li>
+                <li>Aids in filtering out non-informative variants in large datasets.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Screenshots</h2>
+            <div style="display: flex; justify-content: space-between; gap: 20px;">
+                <div style="text-align: center;">
+                    <img src="screenshot1.png" alt="Input VCF File" style="width: 80%; height: auto;">
+                    <p>Input VCF File</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="screenshot.png" alt="Filter Criteria Interface" style="width: 100%; height: auto;">
+                    <p>Filter Criteria Interface</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="screenshot2.png" alt="Output Filtered VCF" style="width: 80%; height: auto;">
+                    <p>Output Filtered VCF</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Input Format and Output Structure</h2>
+            <p>
+                The input file should be in <strong>.xlsx</strong> format. Specify filtering criteria such as quality scores, coverage depth, or specific genomic regions. The software outputs a filtered VCF file containing only the variants that meet the criteria.
+            </p>
+        </section>
+    </main>
+    <footer>
+        <p>Developed by ICAR-NIPB, New Delhi, India and ICAR-IASRI, New Delhi, India | Contact us at <a href="samarth.godara@gmail.com">samarth.godara@gmail.com</a></p>
+    </footer>
+</body>
+</html>
